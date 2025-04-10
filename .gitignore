@@ -1,1 +1,16 @@
+# Ignore the virtual environment
+myenv/
+
+# Ignore Python bytecode files
+*.pyc
+__pycache__/
+
+# Ignore .DS_Store (macOS specific)
+.DS_Store
+
+# Ignore Vercel-specific files (you can add other config files here)
+.vercel/
+
+# Ignore database files if you don't want to push them to GitHub
+*.db
 .vercel
