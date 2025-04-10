@@ -58,6 +58,3 @@ def handler(req, res):
 if __name__ == "__main__":
     create_user_table()  # Create table if it doesn't exist
     app.run(debug=True)
-
-
-
