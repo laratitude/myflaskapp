@@ -51,6 +51,11 @@ def add_user_route():
         return jsonify({"message": f"User {username} added successfully!"}), 200
     return jsonify({"error": "Username is required"}), 400
 
+# Add route for favicon.ico (This is the new part)
+@app.route('/favicon.ico')
+def favicon():
+    return "", 204  # Empty response with status 204
+
 # Export Flask app for Vercel serverless deployment
 def handler(req, res):
     return app(req, res)
@@ -58,3 +63,4 @@ def handler(req, res):
 if __name__ == "__main__":
     create_user_table()  # Create table if it doesn't exist
     app.run(debug=True)
+
