@@ -1,0 +1,56 @@
+from flask import Flask, render_template, request, redirect, url_for
+import sqlite3
+import time
+
+app = Flask(__name__)
+
+# Function to create the user table in the database
+def create_user_table():
+    conn = sqlite3.connect('user_login_system.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY,
+            username TEXT UNIQUE,
+            last_login INTEGER
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+# Function to add a user to the database
+def add_user(username):
+    conn = sqlite3.connect('user_login_system.db')
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO users (username, last_login) VALUES (?, ?)", 
+                   (username, int(time.time())))
+    conn.commit()
+    conn.close()
+
+# Function to get all users
+def get_users():
+    conn = sqlite3.connect('user_login_system.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT username FROM users")
+    users = cursor.fetchall()
+    conn.close()
+    return users
+
+# Home route to display users and the form
+@app.route('/')
+def home():
+    users = get_users()  # Get the users from the database
+    return render_template('index.html', users=users)
+
+# Route to add a user
+@app.route('/add_user', methods=['POST'])
+def add_user_route():
+    username = request.form['username']
+    if username:
+        add_user(username)
+    return redirect(url_for('home'))  # Redirect back to the home page
+
+# Run the Flask app
+if __name__ == "__main__":
+    create_user_table()  # Create the table if not exists
+    app.run(debug=True)

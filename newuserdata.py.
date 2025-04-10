@@ -1,0 +1,19 @@
+def add_user(username, email, password):
+    try:
+        # Hash the password for security
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+        conn = sqlite3.connect('user_security.db')
+        cursor = conn.cursor()
+
+        # Insert user data into the database
+        cursor.execute("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", 
+                       (username, email, hashed_password))
+        conn.commit()
+        print(f"User {username} added successfully.")
+    except sqlite3.IntegrityError:
+        print(f"User {username} already exists.")
+    except Exception as e:
+        print(f"Error adding user: {e}")
+    finally:
+        conn.close()
